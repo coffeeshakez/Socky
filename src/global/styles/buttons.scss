@@ -1,0 +1,19 @@
+@import './variables.scss';
+
+.btn {
+    height: 2rem;
+    width: 10rem;
+    border-radius: $globalBorderRadius;
+    background-color: black;
+    color: white;
+    border: none;
+    transition: all 250ms ease-in-out;
+    font-weight: bold;
+    font-size: .75rem;
+}
+
+.btn:hover{
+    border-color: white;
+    cursor:pointer;
+    width: 10.25rem;
+}

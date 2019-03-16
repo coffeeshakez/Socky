@@ -1,0 +1,28 @@
+
+@import './variables.scss';
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.center{
+    align-items: center;
+}
+
+label {
+    text-align: left;
+    font-weight: bold;
+}
+
+input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: .25rem;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: $globalBorderRadius;
+    box-sizing: border-box;
+    font-size: 1rem;
+  }

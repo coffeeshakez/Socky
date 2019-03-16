@@ -1,0 +1,48 @@
+@import './styles/variables.scss';
+
+.NavClass{
+    
+    list-style: none;
+    background-color: black;
+    
+}
+.NavClass li {
+    display: inline-block;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.NavClass li a{
+    text-decoration: none;
+}
+
+.NavClass h1 {
+    margin: .5rem 0 .5rem 0;
+}
+
+.h2Class{
+    color:$primaryColor;
+    margin-bottom:30px;
+}
+
+.pull-the-rope-container{
+    display: flex;
+    width: 100;
+    justify-content: center;
+}
+
+.rope{
+    height: 5rem;
+    line-height: 5rem;
+    text-align: left;
+}
+
+.NavClass li a.active{
+color: #00C9A7;
+}
+
+.btn-header{
+    background-color: white;
+    color: black;
+    
+}

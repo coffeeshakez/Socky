@@ -1,0 +1,90 @@
+@import '../../global/styles/variables.scss';
+
+.games-container {
+    display: flex;
+    width: inherit;
+    justify-content: center;
+    margin-top: 4rem;
+}
+
+.game--selected {
+    background-color: $colorOne !important;
+    height: 5.5rem !important;
+    width: 5.5rem !important;
+    animation: rubberBand 0.5s ease;
+    border: 1px solid $colorTwo;
+}
+
+.games-list{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.game{
+    height: 5rem;
+    width: 5rem;
+    background-color: lighten($colorOne, 5%);
+    transition: all 250ms ease-in-out;
+}
+
+.flex-column{
+    display: flex;
+    flex-direction: column
+}
+
+ul {
+    list-style-type: none; 
+}
+
+ul li{
+    margin: .5rem;
+}
+
+.username{
+    animation: rubberBand 0.7s ease;
+}
+
+
+@keyframes slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rubberBand {
+    from {
+      transform: scale3d(1, 1, 1);
+    }
+  
+    30% {
+      transform: scale3d(1.25, 0.75, 1);
+    }
+  
+    40% {
+      transform: scale3d(0.75, 1.25, 1);
+    }
+  
+    50% {
+      transform: scale3d(1.15, 0.85, 1);
+    }
+  
+    65% {
+      transform: scale3d(.95, 1.05, 1);
+    }
+  
+    75% {
+      transform: scale3d(1.05, .95, 1);
+    }
+  
+    to {
+      transform: scale3d(1, 1, 1);
+    }
+  }
+  
