@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Table, Container } from "reactstrap";
+import { Table, Container } from "reactstrap";
 import { socket } from "../global/header";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 class Kitchen extends Component {
@@ -19,7 +19,6 @@ class Kitchen extends Component {
   changeData = () => socket.emit("initial_data");
 
   componentDidMount() {
-    var state_current = this;
     socket.emit("initial_data");
     socket.on("get_data", this.getData);
     socket.on("change_data", this.changeData);

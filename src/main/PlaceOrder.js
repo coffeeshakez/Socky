@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Table, Container } from "reactstrap";
+import { Button, Container } from "reactstrap";
 import { socket } from "../global/header";
 class PlaceOrder extends Component {
   constructor() {

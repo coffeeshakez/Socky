@@ -14,7 +14,8 @@ class Dashboard extends React.Component {
             connected: false,
             selection: 0,
             prevSelected: undefined,
-            connectedClients: []
+            connectedClients: [],
+            noOfGames: 6
         }
         this.connectHost = this.connectHost.bind(this);
     }
@@ -38,7 +39,7 @@ class Dashboard extends React.Component {
             connected: true,
             connectedClients: clients
         }));
-        
+
     }
 
     updateClientData = data => {
@@ -48,28 +49,32 @@ class Dashboard extends React.Component {
     }
 
     handleControllerEvent = event => {
-        console.log("STATE SELECTION: " + this.state.selection);
 
         switch (event.event) {
-            case "up": if (this.state.selection + 1 <= 6) { this.state.selection += 1 };
+            case "up": if (this.state.selection + 1 <= 5) { this.setState({ selection: this.state.selection += 1 }) };
                 break;
-            case "down": if (this.state.selection - 1 >= 0) { this.state.selection = this.state.selection - 1 };
+            case "down": if (this.state.selection - 1 >= 0) { this.setState({ selection: this.state.selection - 1 }) };
+                break;
+            default: console.log("out of range");
                 break;
         }
         this.selectGame();
     }
 
     selectGame() {
+        console.log("going for selection");
         let games = document.getElementsByClassName("game");
-        console.log(games[this.state.selection]);
+        // console.log(games[this.state.selection]);
         // games[this.state.selection].setAttribute("style", "background-color: orange; height: 6rem; width: 6rem; ");
         games[this.state.selection].classList.add("game--selected");
 
-        console.log("prevselected: " + this.state.prevSelected);
-        if (this.state.prevSelected) {
-            this.state.prevSelected.classList.remove("game--selected");
-        }
 
+        if (this.state.prevSelected) {
+            if (this.state.prevSelected != games[this.state.selection]) {
+                this.state.prevSelected.classList.remove("game--selected");
+            }
+
+        }
         this.setState({ prevSelected: games[this.state.selection] })
     }
 
@@ -89,8 +94,8 @@ class Dashboard extends React.Component {
         socket.off("controller_event", this.handleControllerEvent);
     }
 
-    connectHost() {
-        console.log(this.state.name);
+    connectHost(e) {
+        e.preventDefault();
         socket.emit("connect_host", this.state.name);
     }
 
@@ -99,23 +104,12 @@ class Dashboard extends React.Component {
         console.log(this.state.name);
     }
 
-    toggleFullscreen() {
-        let elem = document.querySelector("main-content");
-      
-        if (!document.fullscreenElement) {
-          elem.requestFullscreen().then({}).catch(err => {
-            alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-          });
-        } else {
-          document.exitFullscreen();
-        }
-      }
 
     render() {
         return (
             <React.Fragment>
 
-                <button>Fullscreen</button>
+
 
                 {this.state.connected &&
                     <div className="page-section">
@@ -136,7 +130,7 @@ class Dashboard extends React.Component {
                     <div className="page-section">
                         <div className="games-container">
                             <ul className="games-list">
-                                <li className="game"> <p>Pull the rope</p></li>
+                                <li className="game"> <p>Pull the pope</p></li>
                                 <li className="game"><p> Click the bean </p></li>
                                 <li className="game"><p> </p></li>
                                 <li className="game"><p>Game5</p></li>
@@ -148,24 +142,23 @@ class Dashboard extends React.Component {
                 }
 
 
-                <div className="page-section">
-                    {!this.state.connected &&
-                        <div>
+
+                {!this.state.connected &&
+                    <div className="page-section">
+                        <form>
                             <div className="form-group">
                                 <label>Room name</label>
                                 <input type="text" onChange={e => this.handleInputChange(e)}></input>
                             </div>
 
                             <div className="form-group center">
-                                <button className="btn" onClick={this.connectHost}>Create room!</button>
-                                <button className="btn"><NavLink to="/clientcontroller">
-                                    Connect as client
-                            </NavLink></button>
+                                <button className="btn" onClick={ (e) => this.connectHost(e)}>Create room!</button>
+                                <NavLink to="/clientcontroller">Connect as client</NavLink>
                             </div>
+                        </form>
+                    </div>
+                }
 
-                        </div>
-                    }
-                </div>
             </React.Fragment>
         );
     }

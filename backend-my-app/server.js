@@ -38,6 +38,7 @@ io.on("connection", socket => {
     if(Object.keys(rooms).includes(data.roomName)){
       socket.join(data.roomName);
       io.in(data.roomName).emit("broadcast_client_connected", {roomName: data.roomName, clientName: data.clientName});
+      socket.emit("client_connect_success", {roomName: data.roomName, clientName: data.clientName});
     }
     
     console.log(`client '${data.clientName}' connected to room '${data.roomName}'`)

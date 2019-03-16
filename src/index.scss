@@ -2,6 +2,7 @@
 @import './global/styles/buttons.scss';
 @import './global/styles/variables.scss';
 @import './global/styles/forms.scss';
+@import './global/styles/fonts.scss';
 
 body {
   margin: 0;
@@ -13,6 +14,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: white;
   width: 100vw;
+  font-family: 'Lilita One';
 }
 
 body:fullscreen {
@@ -47,21 +49,37 @@ code {
 
 .page-section {
   padding: 1rem;
-  margin: 2rem;
+  margin: .75rem;
+  width: 100%;
 }
 
 a{
   color: white;
+  text-decoration: none;
 }
 
+a:hover, a.active{
+  border-bottom: 1px solid white;
+}
+
+a.active{
+  color: #00C9A7;
+  }
+
+form{
+  margin: 0;
+  padding: 0;
+  width: inherit;
+}
 
 .main-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 90%;
   margin: auto;
+  max-width: 30rem;
 }
 
 ul, li {
