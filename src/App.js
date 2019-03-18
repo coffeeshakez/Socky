@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import "./App.css";
 import { Header } from "./global/header";
 import { Switch, Route } from "react-router-dom";
-
-import PlaceOrder from "./main/PlaceOrder";
-import UpdatePredicted from "./main/UpdatePredicted";
-import Kitchen from "./main/Kitchen";
 import Dashboard from './pages/dashboard/Dashboard';
 import ClientController from './pages/clientController/ClientController';
 import PageLayout from "./pageLayout/PageLayout";
@@ -27,8 +23,6 @@ class App extends Component {
             <Route exact path="/" component={Dashboard} />
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/clientcontroller" component={ClientController} />
-            <Route path="/updatepredicted" component={UpdatePredicted} />
-            <Route path="/kitchen" component={Kitchen} />
           </Switch>
         </PageLayout>
       </div>

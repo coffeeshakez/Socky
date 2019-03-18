@@ -1,13 +1,15 @@
 import React from 'react';
 import { socket } from "../../global/header";
 import './clientController.scss';
+import Controller from '../../games/controller/Controller';
+import CahController from '../../games/cardsAgainstHumanity/CahController';
 
 class Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            userName: "",
+            clientName: "",
             roomName: "",
             connected: false,
             fullscreen: false
@@ -19,29 +21,42 @@ class Dashboard extends React.Component {
     }
 
     initData = data => {
-
         this.setState(prevState => ({
-            userName: data.clientName,
+            clientName: data.clientName,
             roomName: data.roomName,
             connected: true,
+            selectedGame: ""
         }));
+
+        this.centerContent();
+    }
+
+    centerContent() {
+        document.getElementsByClassName("main-content")[0].classList.add("flex-justify-center");
     }
 
     handleUserConnection = data => {
         alert(data);
     }
 
+    handleGameStart = data => {
+        console.log("GAME START: ", data)
+        this.setState({selectedGame: data.selectedGame});
+    }
+
     componentDidMount() {
         socket.on("client_connect_success", this.initData);
+        socket.on("start_game", this.handleGameStart)
     }
 
     componentWillUnmount() {
         socket.off("client_connect_success", this.initData);
+        document.getElementsByClassName("main-content")[0].classList.remove("flex-justify-center");
     }
 
     connectClient(e) {
         e.preventDefault();
-        socket.emit("connect_client", { roomName: this.state.name, clientName: this.state.userName });
+        socket.emit("connect_client", { roomName: this.state.name, clientName: this.state.clientName });
     }
 
     handleInputChange(e) {
@@ -50,22 +65,15 @@ class Dashboard extends React.Component {
     }
 
     handleNameChange(e) {
-
         let val = e.target.value
         val.toLowerCase();
-
         console.log("TOLOWERCASE" + val);
-        this.setState({ userName: val });
+        this.setState({ clientName: val });
     }
 
     handleButtonPress(direction) {
-        switch (direction) {
-            case "up": socket.emit("controller_event", { roomName: this.state.roomName, event: "up" });
-                break;
-            case "down": socket.emit("controller_event", { roomName: this.state.roomName, event: "down" });
-                break;
-        }
-    };
+        socket.emit("controller_event", { roomName: this.state.roomName, action: direction });
+    }
 
     requestFullScreen() {
         let el = document.body;
@@ -80,22 +88,21 @@ class Dashboard extends React.Component {
         }
     }
 
+    getController(){
+        switch(this.state.selectedGame){
+            case "CAH": return <CahController clientName={this.state.clientName} roomName={this.state.roomName}></CahController>
+        }
+    }
+
     render() {
         return (
             <React.Fragment>
 
+                { (this.state.roomName && !this.state.selectedGame) && <Controller roomName={this.state.roomName}></Controller>}
+                {this.state.selectedGame && this.getController() }
                 {!this.state.fullscreen &&
                     <div className="page-section">
-                        <button className="btn" onClick={this.requestFullScreen}>Fullscreen</button>
-                    </div>
-                }
-
-                {this.state.connected &&
-                    <div className="page-section">
-                        <div className="btn-group">
-                            <button className="btn" onClick={() => this.handleButtonPress("down")}>Down</button>
-                            <button className="btn" onClick={() => this.handleButtonPress("up")}>up</button>
-                        </div>
+                        <button className="btn btn__small" onClick={this.requestFullScreen}><i className="fas fa-expand"></i></button>
                     </div>
                 }
 
@@ -107,7 +114,7 @@ class Dashboard extends React.Component {
                                 <input type="text" onChange={e => this.handleInputChange(e)}></input>
                             </div>
                             <div className="form-group">
-                                <label >Username </label>
+                                <label >clientName </label>
                                 <input type="text" onChange={e => this.handleNameChange(e)}></input>
                             </div>
                             <div className="form-group center">
@@ -120,7 +127,7 @@ class Dashboard extends React.Component {
                 {this.state.connected &&
                     <div className="page-section">
                         <h3>Connected to room: {this.state.roomName}</h3>
-                        <h3>User name: {this.state.userName}</h3>
+                        <h3>User name: {this.state.clientName}</h3>
                     </div>
                 }
 

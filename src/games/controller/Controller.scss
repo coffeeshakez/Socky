@@ -1,4 +1,92 @@
+@import '../../global/styles/variables.scss';
 
 .controller-container {
-    
+    width: 100%;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.controller-body {
+    min-height: 12rem;
+    min-width: 12rem;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 33% 33% 33%;
+    background-color: #3334;
+    padding: 2rem;
+    border-radius: 7rem;
+    font-size: 3rem;
+}
+
+.button-up,
+.button-down, 
+.button-left, 
+.button-right{
+    background-color: #333;
+    font-size: inherit;
+    border-radius: 1rem;
+    color: black;
+    box-shadow: 3px 4px black;
+    border: 1px solid #333;
+    padding: 0;
+    text-align: center;
+
+    &:active {
+        transform: translateY(4px);
+    }
+}
+
+.button-up{
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+.button-down{
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 3;
+    grid-row-end: 3;
+}
+
+.button-left {
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 2;
+    grid-row-end: 2;
+}
+
+.button-right {
+    grid-column-start: 3;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 2;
+}
+
+.button-enter {
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 2;
+    color: white;
+    background-color: $primaryColor;
+    font-size: inherit;
+    border-radius: 1rem;
+    border: 1px solid #333;
+}
+
+.button-enter:active {
+    color: $colorThree;
+}
+  
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .controller-body{
+        min-width: 300px;
+        min-height: 300px;
+        font-size: 5rem;
+    }
 }
