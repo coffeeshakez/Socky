@@ -24,9 +24,6 @@ class CahController extends React.Component {
                 }
             })
         }
-
-        
-
     }
 
     componentDidMount(){

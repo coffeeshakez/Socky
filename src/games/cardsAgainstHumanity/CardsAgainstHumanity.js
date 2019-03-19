@@ -11,7 +11,6 @@ class CardsAgainstHumanity extends React.Component {
         super(props)
 
         this.state = {
-            players: props.players,
             dataError: false,
             currentCard: "",
             roomName: props.roomName,
@@ -55,58 +54,53 @@ class CardsAgainstHumanity extends React.Component {
 
     getRandomCard(type) {
 
-        if (card.type == "black") {
+        if (type == "black") {
             let card = this.state.blackCards[Math.floor(Math.random() * this.state.blackCards.length)];
             this.setState({ currentCard: card.text })
         }
+        else {
+            return this.state.whiteCards[Math.floor(Math.random() * this.state.whiteCards.length)];
+        }
 
-        let card = this.state.blackCards[Math.floor(Math.random() * this.state.blackCards.length)];
     }
 
     dealCards(amount) {
 
-        // this.state.users.forEach(userName => {
+        this.props.players.forEach(user => {
+            let cards = [];
 
-        //     let cards = [];
-
-        //     for (let i = 0; amount <= amount; amount++) {
-
-        //         cards.push(this.getRandomCard());
-        //     }
-
-        //     socket.emit("game_event", {
-        //         event: "DEAL_CARDS",
-        //         clientName: userName,
-        //         cards: cards
-        //     });
-        // })
+            for (let i = 0; amount <= amount; amount++) {
+                cards.push(this.getRandomCard());
+            }
+            user.sendEvent("DEAL_CARDS", cards);
+        })
     }
 
     render() {
-                return(
+        return (
             <React.Fragment >
-                    <div className="page-section">
-                        <h1>Cards against humanity</h1>
+                <div className="page-section">
+                    <h1>Cards against humanity</h1>
 
-                        <div className="card-container">
+                    <div className="card-container">
 
-                            <div className="card">
-                                <h1>{this.state.currentCard}</h1>
-                            </div>
-
+                        <div className="card">
+                            <h1>{this.state.currentCard}</h1>
                         </div>
-                    </div>
 
-                    <div className="page-section">
-                        <div className="player-container">
-                            <div className="player">Dobed</div>
-                            <div className="player ready">Marius</div>
-                            <div className="player">Kristian</div>
-                            <div className="player">Patrick</div>
-                            <div className="player ready">Nicu</div>
-
-                        </div>
                     </div>
+                </div>
+
+                <div className="page-section">
+                    <div className="player-container">
+                        <div className="player">Dobed</div>
+                        <div className="player ready">Marius</div>
+                        <div className="player">Kristian</div>
+                        <div className="player">Patrick</div>
+                        <div className="player ready">Nicu</div>
+
+                    </div>
+                </div>
 
             </React.Fragment >
 

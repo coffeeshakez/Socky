@@ -26,6 +26,8 @@ let rooms = {};
 io.on("connection", socket => {
   console.log("New client connected: " + socket.id);
 
+  console.log(io.rooms);
+
   //***************** HOST CONNECTION ****************** */ 
   socket.on("connect_host", (roomName) => {
     console.log(`room with name '${roomName}' connected`)
@@ -39,16 +41,17 @@ io.on("connection", socket => {
   socket.on("connect_client", (data) => {
     if(Object.keys(rooms).includes(data.roomName)){
       users[data.clientName] = socket.id;
-      
       socket.join(data.roomName);
       
       //Notify host of connection TODO: Only send to HOst connection, not all
-      io.in(data.roomName).emit("broadcast_client_connected", {roomName: data.roomName, clientName: data.clientName});
+      io.in(data.roomName).emit("broadcast_client_connected", {roomName: data.roomName, clientName: data.clientName, socketId: socket.id});
 
       //Notify client of connection
       socket.emit("client_connect_success", {roomName: data.roomName, clientName: data.clientName});
     }
-    console.log(`client '${data.clientName}' connected to room '${data.roomName}'`)
+
+    console.log(`client '${socket.id}' connected to room '${data.roomName}'`)
+    setTimeout(() => console.log("ROOMS THE USER IS CONNECTED TO: ", socket.rooms), 1000);
   });
 
   socket.on("game_event", (data) => {
@@ -59,6 +62,9 @@ io.on("connection", socket => {
 
     io.in(data.roomName).emit("game_event", data);
   });
+
+
+
 
   socket.on("controller_event", (data) => {
     console.log("socket is connected to rooms: " + Object.keys(socket.rooms));

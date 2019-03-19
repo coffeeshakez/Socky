@@ -3,6 +3,7 @@ import { socket } from "../../global/header";
 import './dashboard.scss';
 import { NavLink } from "react-router-dom";
 import CardsAgainstHumanity from '../../games/cardsAgainstHumanity/CardsAgainstHumanity';
+import User from '../../model/User';
 
 class Dashboard extends React.Component {
 
@@ -30,15 +31,14 @@ class Dashboard extends React.Component {
     }
 
     initClientData = data => {
-        console.log(data.clientName);
+        console.log("ClientName connected:" , data);
         let clients = [...this.state.connectedClients];
-        clients.push(data.clientName);
-
-        this.setState(prevState => ({
-            clientData: data,
-            connected: true,
+        clients.push(new User(data.clientName, data.socketId));
+        let user = new User("fuck", "fuack");
+        console.log(user);
+        this.setState({
             connectedClients: clients
-        }));
+        }, () => console.log("state after initclientdata" , this.state.connectedClients));
 
     }
 
@@ -132,8 +132,8 @@ class Dashboard extends React.Component {
                             <h3> Room id: {this.state.roomName} </h3>
                             <h3>Connected users</h3>
                             <ul>
-                                {this.state.connectedClients.map((val, index) => {
-                                    return (<li className="clientName" key={index}>{val}</li>)
+                                {this.state.connectedClients.map((client, index) => {
+                                    return (<li className="clientName" key={index}>{ client.getUserName() }</li>)
                                 })}
                             </ul>
                         </div>
