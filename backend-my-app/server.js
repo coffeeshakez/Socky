@@ -3,6 +3,7 @@ const http = require("http");
 // const socketIO = require("socket.io");
 const cors = require('cors');
 const socketIO = require('socket.io')
+const EVENT = require('./scripts/Event');
 
 // our localhost port
 const port = process.env.PORT || 80;
@@ -19,17 +20,15 @@ io.set('origins', '*:*');
 
 app.use(cors());
 
-let users = {};
 
-let rooms = {};
 
 io.on("connection", socket => {
   console.log("New client connected: " + socket.id);
 
   console.log(io.rooms);
 
-  //***************** HOST CONNECTION ****************** */ 
-  socket.on("connect_host", (roomName) => {
+  /* **************** HOST CONNECTION ****************** */ 
+  socket.on(EVENT.connectHost, (roomName) => {
     console.log(`room with name '${roomName}' connected`)
     socket.join(roomName);
     rooms[roomName] = socket;
@@ -37,8 +36,8 @@ io.on("connection", socket => {
     socket.emit("room_connected", roomName);
   });
 
-  //***************** CLIENT CONNECTION ****************** */ 
-  socket.on("connect_client", (data) => {
+  /* **************** CLIENT CONNECTION ****************** */ 
+  socket.on(EVENT.connectClient, (data) => {
     if(Object.keys(rooms).includes(data.roomName)){
       users[data.clientName] = socket.id;
       socket.join(data.roomName);
@@ -54,8 +53,8 @@ io.on("connection", socket => {
     setTimeout(() => console.log("ROOMS THE USER IS CONNECTED TO: ", socket.rooms), 1000);
   });
 
-  socket.on("game_event", (data) => {
-    io.in(data.roomName).emit("game_event", data);
+  socket.on(EVENT.gameEvent, (data) => {
+    io.in(data.roomName).emit(EVENT.gameEvent, data);
   });
 
   socket.on("game_event_toUser", (data) => {
@@ -63,10 +62,7 @@ io.on("connection", socket => {
     io.in(data.roomName).emit("game_event", data);
   });
 
-
-
-
-  socket.on("controller_event", (data) => {
+  socket.on(EVENT.controllerEvent, (data) => {
     console.log("socket is connected to rooms: " + Object.keys(socket.rooms));
     let rooms = Object.keys(socket.rooms)
     Object.keys(socket.rooms).map(val => {
@@ -76,15 +72,11 @@ io.on("connection", socket => {
     io.in(data.roomName).emit("controller_event", data);
   });
   
-  socket.on("start_game", (data) => {
-    console.log("START GAME in room" + data.roomName);
-    io.in(data.roomName).emit("start_game", data);
-  });
   
   //TODO: notify server of disconnect
   socket.on("disconnect", () => {
-    console.log("user disconnected");
-
+    let room = Object.keys(socket.rooms)[0];
+    io.in(room).emit(EVENT.userDisconnected, socket.id)
   });
 });
 

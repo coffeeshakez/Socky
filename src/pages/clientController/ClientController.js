@@ -65,10 +65,8 @@ class Dashboard extends React.Component {
     }
 
     handleNameChange(e) {
-        let val = e.target.value
-        val.toLowerCase();
-        console.log("TOLOWERCASE" + val);
-        this.setState({ clientName: val });
+        let name = e.target.value
+        this.setState({ clientName: name });
     }
 
     handleButtonPress(direction) {
