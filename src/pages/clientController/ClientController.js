@@ -3,6 +3,7 @@ import { socket } from "../../global/header";
 import './clientController.scss';
 import Controller from '../../games/controller/Controller';
 import CahController from '../../games/cardsAgainstHumanity/CahController';
+import {CLIENT_MESSAGES, SERVER_MESSAGES} from '../../scripts/Event';
 
 class Dashboard extends React.Component {
 
@@ -27,12 +28,6 @@ class Dashboard extends React.Component {
             connected: true,
             selectedGame: ""
         }));
-
-        this.centerContent();
-    }
-
-    centerContent() {
-        document.getElementsByClassName("main-content")[0].classList.add("flex-justify-center");
     }
 
     handleUserConnection = data => {
@@ -45,18 +40,17 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount() {
-        socket.on("client_connect_success", this.initData);
+        socket.on(SERVER_MESSAGES.clientConnected, this.initData);
         socket.on("start_game", this.handleGameStart)
     }
 
     componentWillUnmount() {
         socket.off("client_connect_success", this.initData);
-        document.getElementsByClassName("main-content")[0].classList.remove("flex-justify-center");
     }
 
     connectClient(e) {
         e.preventDefault();
-        socket.emit("connect_client", { roomName: this.state.name, clientName: this.state.clientName });
+        socket.emit(CLIENT_MESSAGES.connectClient, { roomName: this.state.name, clientName: this.state.clientName });
     }
 
     handleInputChange(e) {
@@ -65,10 +59,8 @@ class Dashboard extends React.Component {
     }
 
     handleNameChange(e) {
-        let val = e.target.value
-        val.toLowerCase();
-        console.log("TOLOWERCASE" + val);
-        this.setState({ clientName: val });
+        let name = e.target.value
+        this.setState({ clientName: name });
     }
 
     handleButtonPress(direction) {

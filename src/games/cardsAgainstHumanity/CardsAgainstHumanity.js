@@ -61,7 +61,6 @@ class CardsAgainstHumanity extends React.Component {
         else {
             return this.state.whiteCards[Math.floor(Math.random() * this.state.whiteCards.length)];
         }
-
     }
 
     dealCards(amount) {

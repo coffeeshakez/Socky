@@ -4,6 +4,8 @@ import './dashboard.scss';
 import { NavLink } from "react-router-dom";
 import CardsAgainstHumanity from '../../games/cardsAgainstHumanity/CardsAgainstHumanity';
 import User from '../../model/User';
+import * as UTILS from '../../utils/Utils'
+import {CLIENT_MESSAGES, SERVER_MESSAGES} from '../../scripts/Event';
 
 class Dashboard extends React.Component {
 
@@ -17,9 +19,27 @@ class Dashboard extends React.Component {
             prevSelected: undefined,
             connectedClients: [],
             noOfGames: 6,
-            selectedGame: ""
+            selectedGame: "",
+            games: [], 
+            selectionIndex: 0
         }
         this.connectHost = this.connectHost.bind(this);
+
+        console.log(CLIENT_MESSAGES)
+    }
+
+
+    componentDidMount() {
+        //TODO: Notify client about game in progress
+        socket.on(SERVER_MESSAGES.hostConnected, this.initServerData);
+        socket.on(SERVER_MESSAGES.clientConnected, this.initClientData);
+        socket.on(CLIENT_MESSAGES.controllerEvent, this.handleControllerEvent);
+    }
+
+    componentWillUnmount() {
+        socket.off(SERVER_MESSAGES.hostConnected, this.initServerData);
+        socket.off(SERVER_MESSAGES.clientConnected, this.initClientData);
+        socket.off(CLIENT_MESSAGES.controllerEvent, this.handleControllerEvent);
     }
 
     initServerData = name => {
@@ -27,74 +47,59 @@ class Dashboard extends React.Component {
             roomName: name,
             connected: true,
         });
-        this.selectGame();
+        // this.selectGame();
     }
 
     initClientData = data => {
-        console.log("ClientName connected:" , data);
         let clients = [...this.state.connectedClients];
         clients.push(new User(data.clientName, data.socketId));
-        let user = new User("fuck", "fuack");
-        console.log(user);
+        
+        
         this.setState({
             connectedClients: clients
         }, () => console.log("state after initclientdata" , this.state.connectedClients));
 
     }
 
-    updateClientData = data => {
-        this.setState({
-            clientData: data
-        })
-    }
-
     handleControllerEvent = event => {
         console.log(event.action)
+        let newValue = 0;
         switch (event.action) {
-            case "up": if (this.state.selection + 1 <= 5) { this.setState({ selection: this.state.selection += 1 }) };
+            case "up": newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, +1);
                 break;
-            case "down": if (this.state.selection - 1 >= 0) { this.setState({ selection: this.state.selection - 1 }) };
+            case "down": newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, -1);
                 break;
-            case "right": if (this.state.selection + 1 <= 5) { this.setState({ selection: this.state.selection += 1 }) };
+            case "right": newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, +1);
                 break;
-            case "left": if (this.state.selection - 1 >= 0) { this.setState({ selection: this.state.selection - 1 }) };
+            case "left":newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, -1);
                 break;
-            case "enter": this.setState({ selectedGame: document.getElementById("game--selected").firstChild.textContent });
+            case "enter": newValue = this.getGame([this.state.games[this.state.selectedGame]]);
                 break;
             default: console.log("out of range or unrecognized action");
-                // this.setState({selectedGame: document.getElementsByClassName("game--selected")[0].innerHTML}
                 break;
         }
-        this.selectGame();
+
+        this.setState({selectionIndex: newValue});
+        
+        console.log("SELECTIONINDEZX : " + this.state.selectionIndex);
+    }
+
+    setSelection(){
+
     }
 
     selectGame() {
-
         let selectedGame = document.getElementById("game--selected");
         if (selectedGame) {
             selectedGame.id = "";
         }
-
         let games = document.getElementsByClassName("game");
-        games[this.state.selection].id = "game--selected";
-    }
-
-    componentDidMount() {
-        socket.on("room_connected", this.initServerData);
-        //TODO: Notify client about game in progress
-        socket.on("broadcast_client_connected", this.initClientData);
-        socket.on("controller_event", this.handleControllerEvent);
-    }
-
-    componentWillUnmount() {
-        socket.off("room_connected", this.initServerData);
-        socket.off("broadcast_client_connected", this.initClientData);
-        socket.off("controller_event", this.handleControllerEvent);
+        games[this.state.selectionIndex].id = "game--selected";
     }
 
     connectHost(e) {
         e.preventDefault();
-        socket.emit("connect_host", this.state.name);
+        socket.emit(CLIENT_MESSAGES.connectHost, this.state.name);
     }
 
     handleInputChange(e) {
