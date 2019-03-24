@@ -1,17 +1,18 @@
 
 
-
-const EVENT = {
+const CLIENT_MESSAGES = {
     connectClient: "CONNECT_CLIENT",
     connectHost: "CONNECT_HOST",
-    userDisconnected: "GLOBAL_EVENT_USER_DISCONNECT",
-    userConnected: "GLOBAL_EVENT_USER_CONNECT",
     gameEvent: "GAME_EVENT",
-    controllerEvent: "CONTROLLER_EVENT",
+    controllerEvent: "CONTROLLER_EVENT"
+  }
+
+  const SERVER_MESSAGES = {
+    clientConnected: "CLIENT_CONNECTED",
+    hostConnected: "HOST_CONNECTED",
+    clientDisconnected: "GLOBAL_EVENT_CLIENT_DISCONNECTED",
   }
 
 
-  module.exports = {EVENT};
 
-
-  
+  module.exports = {CLIENT_MESSAGES, SERVER_MESSAGES};

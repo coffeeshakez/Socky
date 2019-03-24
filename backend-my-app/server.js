@@ -3,7 +3,10 @@ const http = require("http");
 // const socketIO = require("socket.io");
 const cors = require('cors');
 const socketIO = require('socket.io')
-const EVENT = require('./scripts/Event');
+const {CLIENT_MESSAGES, SERVER_MESSAGES} = require('./scripts/Event');
+const Room =  require('./models/Room');
+const Client = require('./models/Client');
+
 
 // our localhost port
 const port = process.env.PORT || 80;
@@ -20,6 +23,7 @@ io.set('origins', '*:*');
 
 app.use(cors());
 
+rooms = [];
 
 
 io.on("connection", socket => {
@@ -28,41 +32,51 @@ io.on("connection", socket => {
   console.log(io.rooms);
 
   /* **************** HOST CONNECTION ****************** */ 
-  socket.on(EVENT.connectHost, (roomName) => {
-    console.log(`room with name '${roomName}' connected`)
+  socket.on(CLIENT_MESSAGES.connectHost, (roomName) => {
+    
+    console.log(`Created room with name:  '${roomName}' connected`)
     socket.join(roomName);
-    rooms[roomName] = socket;
-    console.log(`Available rooms: ${Object.keys(rooms)}`);
-    socket.emit("room_connected", roomName);
+    let room = new Room(roomName, socket.id)
+    rooms.push(room);
+    
+    console.log(rooms);
+
+    socket.emit(SERVER_MESSAGES.hostConnected, roomName);
   });
 
   /* **************** CLIENT CONNECTION ****************** */ 
-  socket.on(EVENT.connectClient, (data) => {
-    if(Object.keys(rooms).includes(data.roomName)){
-      users[data.clientName] = socket.id;
-      socket.join(data.roomName);
+  socket.on(CLIENT_MESSAGES.connectClient, (data) => {
+    
+    rooms.forEach( room => {
+      if(room.roonName == data.roomName){
+        socket.join(data.roomName);
+        let client = new Client(data.userName, socketId, socket.id);
+        room.clients.push(client);
+        io.in(data.roomName).emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, clientName: data.clientName, socketId: socket.id});
+      }
+    });
+      
       
       //Notify host of connection TODO: Only send to HOst connection, not all
-      io.in(data.roomName).emit("broadcast_client_connected", {roomName: data.roomName, clientName: data.clientName, socketId: socket.id});
+      
 
       //Notify client of connection
-      socket.emit("client_connect_success", {roomName: data.roomName, clientName: data.clientName});
-    }
+      socket.emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, clientName: data.clientName});
+    
 
-    console.log(`client '${socket.id}' connected to room '${data.roomName}'`)
+    
     setTimeout(() => console.log("ROOMS THE USER IS CONNECTED TO: ", socket.rooms), 1000);
   });
 
-  socket.on(EVENT.gameEvent, (data) => {
-    io.in(data.roomName).emit(EVENT.gameEvent, data);
+  socket.on(CLIENT_MESSAGES.gameEvent, (data) => {
+    io.in(data.roomName).emit(CLIENT_MESSAGES.gameEvent, data);
   });
 
   socket.on("game_event_toUser", (data) => {
-
     io.in(data.roomName).emit("game_event", data);
   });
 
-  socket.on(EVENT.controllerEvent, (data) => {
+  socket.on(CLIENT_MESSAGES.controllerEvent, (data) => {
     console.log("socket is connected to rooms: " + Object.keys(socket.rooms));
     let rooms = Object.keys(socket.rooms)
     Object.keys(socket.rooms).map(val => {
@@ -76,9 +90,14 @@ io.on("connection", socket => {
   //TODO: notify server of disconnect
   socket.on("disconnect", () => {
     let room = Object.keys(socket.rooms)[0];
-    io.in(room).emit(EVENT.userDisconnected, socket.id)
+    io.in(room).emit(SERVER_MESSAGES.userDisconnected, socket.id)
   });
 });
+
+
+
+
+
 
 /* Below mentioned steps are performed to return the Frontend build of create-react-app from build folder of backend */
 
