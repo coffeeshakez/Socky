@@ -6,6 +6,7 @@ import CardsAgainstHumanity from '../../games/cardsAgainstHumanity/CardsAgainstH
 import User from '../../model/User';
 import * as UTILS from '../../utils/Utils'
 import {CLIENT_MESSAGES, SERVER_MESSAGES} from '../../scripts/Event';
+import Game from '../../model/Game';
 
 class Dashboard extends React.Component {
 
@@ -20,7 +21,7 @@ class Dashboard extends React.Component {
             connectedClients: [],
             noOfGames: 6,
             selectedGame: "",
-            games: [], 
+            games: [new Game("CAH", "Cards against humanity")], 
             selectionIndex: 0
         }
         this.connectHost = this.connectHost.bind(this);
@@ -78,10 +79,7 @@ class Dashboard extends React.Component {
             default: console.log("out of range or unrecognized action");
                 break;
         }
-
-        this.setState({selectionIndex: newValue});
-        
-        console.log("SELECTIONINDEZX : " + this.state.selectionIndex);
+        this.setState({selectionIndex: newValue, selectedGame: this.games[newValue]});
     }
 
     setSelection(){
@@ -89,12 +87,8 @@ class Dashboard extends React.Component {
     }
 
     selectGame() {
-        let selectedGame = document.getElementById("game--selected");
-        if (selectedGame) {
-            selectedGame.id = "";
-        }
-        let games = document.getElementsByClassName("game");
-        games[this.state.selectionIndex].id = "game--selected";
+       
+    
     }
 
     connectHost(e) {
@@ -108,19 +102,7 @@ class Dashboard extends React.Component {
     }
 
     getGame() {
-        switch (this.state.selectedGame) {
-            case "CAH": return (
-                <CardsAgainstHumanity
-                    roomName={this.state.roomName}
-                    players={this.state.connectedClients}>
-                </CardsAgainstHumanity>)
-
-            default: {
-                console.log("Current game is probably undefined");
-            }
-        }
-
-        //notify clients about change
+        
     }
 
     render() {
@@ -149,12 +131,9 @@ class Dashboard extends React.Component {
                     <div className="page-section">
                         <div className="games-container">
                             <ul className="games-list">
-                                <li className="game"> <p>Pull the pope</p></li>
-                                <li className="game"><p> Click the bean </p></li>
-                                <li className="game"><p> Whack a mole</p></li>
-                                <li className="game"><p>Rock, scissors, WW3</p></li>
-                                <li className="game"><p>Rub a duck</p></li>
-                                <li className="game"><p>CAH</p></li>
+                                {this.state.games.map((game, index) => (
+                                    <li key={index} className="game">{game.id}</li>
+                                ))}
                             </ul>
                         </div>
                     </div>

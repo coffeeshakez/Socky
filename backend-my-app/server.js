@@ -23,7 +23,7 @@ io.set('origins', '*:*');
 
 app.use(cors());
 
-rooms = [];
+let rooms = [];
 
 
 io.on("connection", socket => {
@@ -50,7 +50,7 @@ io.on("connection", socket => {
     rooms.forEach( room => {
       if(room.roonName == data.roomName){
         socket.join(data.roomName);
-        let client = new Client(data.userName, socketId, socket.id);
+        let client = new Client(data.userName, socket.id);
         room.clients.push(client);
         io.in(data.roomName).emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, clientName: data.clientName, socketId: socket.id});
       }
