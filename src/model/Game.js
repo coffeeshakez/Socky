@@ -1,14 +1,17 @@
-import CardsAgainstHumanity from '../games/cardsAgainstHumanity';
-
+import games from './Games';
 export default class Game{
 
     constructor(id, name){
         this.id = id;
         this.name = name;
+        this.selected = false;
     }
 
     getGame(){
-        return CardsAgainstHumanity
+        if(Object.keys(games).find(this.id)){
+            return games[this.id];
+        }
+        else return null
     }
 
     getId(){

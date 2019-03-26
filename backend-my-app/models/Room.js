@@ -1,9 +1,7 @@
-
-
-
 function Room(roomName, roomId) {
     this.roomName = roomName;
     this.roomId = roomId;
+    this.connectedClients = [];
   }
   // Sets the age
   // 
