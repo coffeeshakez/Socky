@@ -21,6 +21,11 @@ const io = socketIO(server);
 io.origins('*:*');
 io.set('origins', '*:*');
 
+io.configure(function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
+
 app.use(cors());
 
 let rooms = [];
@@ -102,10 +107,10 @@ io.on("connection", socket => {
 
 /* Below mentioned steps are performed to return the Frontend build of create-react-app from build folder of backend */
 
-app.use(express.static("../build"));
+app.use(express.static("build"));
 app.use("/kitchen", express.static("build"));
 app.use("/updatepredicted", express.static("build"));
 
-server.listen(port, "0.0.0.0", () => console.log(`Listening on port ${port}`));
+server.listen(port, () => console.log(`Listening on port ${port}`));
 
 // euris.io, lynth.io , zeew.io, zetz.io, 
