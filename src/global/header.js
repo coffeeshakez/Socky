@@ -10,10 +10,10 @@ class Header extends Component {
   constructor() {
     super();
     this.state = {
-      endpoint: "https://frozen-dawn-75764.herokuapp.com:80/" // Update 3001 with port on which backend-my-app/server.js is running.
+      endpoint: "window.location.hostname" // Update 3001 with port on which backend-my-app/server.js is running.
     };
 
-    socket = socketIOClient(this.state.endpoint);
+    socket = socketIOClient(this.state.endpoint, {secure: true});
   }
 
   render() {
