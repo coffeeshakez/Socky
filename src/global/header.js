@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import socketIOClient from "socket.io-client";
+import io from "socket.io-client";
 import "./header.scss";
 
 // The Header creates links that can be used to navigate
@@ -13,8 +13,8 @@ class Header extends Component {
       endpoint: window.location.hostname    
     };
 
-    console.log("HOSTNAME: " , window.location.hostname);
-    socket = socketIOClient(this.state.endpoint);
+   socket = io.connect(this.state.endpoint);
+   
   }
 
   render() {
