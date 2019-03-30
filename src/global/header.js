@@ -13,8 +13,8 @@ class Header extends Component {
       endpoint: window.location.hostname    
     };
 
+    console.log("ENDPOINT", this.state.endpoint)
    socket = io.connect(this.state.endpoint);
-   
   }
 
   render() {
