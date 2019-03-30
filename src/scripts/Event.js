@@ -4,6 +4,7 @@ const CLIENT_MESSAGES = {
   connectClient: "CONNECT_CLIENT",
   connectHost: "CONNECT_HOST",
   gameEvent: "GAME_EVENT",
+  gameEventToUser: "GAME_EVENT_TO_USER",
   controllerEvent: "CONTROLLER_EVENT",
 }
 

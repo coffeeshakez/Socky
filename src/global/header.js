@@ -10,7 +10,7 @@ class Header extends Component {
   constructor() {
     super();
     this.state = {
-      endpoint: "http://192.168.1.109:80/" // Update 3001 with port on which backend-my-app/server.js is running.
+      endpoint: "https://frozen-dawn-75764.herokuapp.com:80/" // Update 3001 with port on which backend-my-app/server.js is running.
     };
 
     socket = socketIOClient(this.state.endpoint);

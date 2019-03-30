@@ -47,19 +47,20 @@ io.on("connection", socket => {
   /* **************** CLIENT CONNECTION ****************** */ 
   socket.on(CLIENT_MESSAGES.connectClient, (data) => {
     
+    let room = {}
     rooms.forEach( room => {
-      if(room.roonName == data.roomName){
+      if(room.roomName == data.roomName){
         socket.join(data.roomName);
         let client = new Client(data.userName, socket.id);
         room.clients.push(client);
         io.in(data.roomName).emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, clientName: data.clientName, socketId: socket.id});
+        return room;
       }
-    });
-      
+    })
       
       //Notify host of connection TODO: Only send to HOst connection, not all
       
-
+      console.log(room);
       //Notify client of connection
       socket.emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, clientName: data.clientName});
     
@@ -83,7 +84,7 @@ io.on("connection", socket => {
       console.log("connected to: ", val);
     })
 
-    io.in(data.roomName).emit("controller_event", data);
+    io.in(data.roomName).emit(CLIENT_MESSAGES.controllerEvent, data);
   });
   
   
@@ -106,3 +107,5 @@ app.use("/kitchen", express.static("build"));
 app.use("/updatepredicted", express.static("build"));
 
 server.listen(port, "0.0.0.0", () => console.log(`Listening on port ${port}`));
+
+// euris.io, lynth.io , zeew.io, zetz.io, 
