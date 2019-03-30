@@ -14,7 +14,7 @@ class Header extends Component {
     };
 
     console.log("ENDPOINT", this.state.endpoint )
-   socket = io.connect(this.state.endpoint + window.location.port);
+   socket = io.connect(this.state.endpoint, {secure: true});
   }
 
   render() {
