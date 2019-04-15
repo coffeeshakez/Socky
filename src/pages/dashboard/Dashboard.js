@@ -2,11 +2,11 @@ import React from 'react';
 import { socket } from "../../global/header";
 import './dashboard.scss';
 import { NavLink } from "react-router-dom";
-import CardsAgainstHumanity from '../../games/cardsAgainstHumanity/CardsAgainstHumanity';
 import User from '../../model/User';
-import * as UTILS from '../../utils/Utils'
+import { handleSelection } from '../../utils/Utils'
 import {CLIENT_MESSAGES, SERVER_MESSAGES} from '../../scripts/Event';
 import Game from '../../model/Game';
+import {GameCard} from '../../global/components/cards/gameCard/GameCard';   
 
 class Dashboard extends React.Component {
 
@@ -17,16 +17,13 @@ class Dashboard extends React.Component {
             roomName: "",
             connected: false,
             selection: 0,
-            prevSelected: undefined,
             connectedClients: [],
-            noOfGames: 6,
-            selectedGame: "",
-            games: [new Game("CAH", "Cards against humanity")], 
-            selectionIndex: 0
+            games: [new Game("CAH", "Cards against humanity"), new Game("CAH", "Cards against humanity"), new Game("FTB", "FLICK THE BEAN"), new Game("WAM", "Whack a mole")],
+            selectionIndex: 0,
+            startGame: false
         }
+        
         this.connectHost = this.connectHost.bind(this);
-
-        console.log(CLIENT_MESSAGES)
     }
 
 
@@ -52,43 +49,42 @@ class Dashboard extends React.Component {
     }
 
     initClientData = data => {
-        let clients = [...this.state.connectedClients];
-        clients.push(new User(data.clientName, data.socketId));
-        
+
+        console.log("Init client data: " , data)
         
         this.setState({
-            connectedClients: clients
+            connectedClients: this.state.connectedClients.concat(new User(data.client.name, data.client.socketId))
         }, () => console.log("state after initclientdata" , this.state.connectedClients));
 
     }
 
     handleControllerEvent = event => {
-        console.log(event.action)
-        let newValue = 0;
+
+        let test;
+        let newValue;
         switch (event.action) {
-            case "up": newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, +1);
+            case "up": newValue = handleSelection(this.state.selectionIndex, 0, this.state.games.length, +1);
                 break;
-            case "down": newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, -1);
+            case "down": newValue = handleSelection(this.state.selectionIndex, 0, this.state.games.length, -1);
                 break;
-            case "right": newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, +1);
+            case "right": newValue = handleSelection(this.state.selectionIndex, 0, this.state.games.length, +1);
                 break;
-            case "left":newValue = UTILS.handleSelection(this.state.selectionIndex, 0, this.state.noOfGames, -1);
+            case "left": newValue = handleSelection(this.state.selectionIndex, 0, this.state.games.length, -1);
                 break;
-            case "enter": newValue = this.getGame([this.state.games[this.state.selectedGame]]);
+            case "enter": this.setState({startGame: true});
                 break;
             default: console.log("out of range or unrecognized action");
                 break;
         }
-        this.setState({selectionIndex: newValue, selectedGame: this.games[newValue]});
-    }
 
-    setSelection(){
-
-    }
-
-    selectGame() {
-       
-    
+        if(test >= 0){
+            console.log("klhfdhjkadshkløfsdahløk");
+        }
+        if(newValue != undefined){
+            this.setState({selectionIndex: newValue}, () => console.log("index after setting state", this.state.selectionIndex))
+        }
+        
+        
     }
 
     connectHost(e) {
@@ -101,16 +97,16 @@ class Dashboard extends React.Component {
         console.log(this.state.name);
     }
 
-    getGame() {
-        
-    }
-
     render() {
+        
+        
+        const Game = () => React.createElement(this.state.games[this.state.selectionIndex].getGame())
+        
         return (
             <React.Fragment>
 
-                {this.state.selectedGame &&
-                    this.getGame()
+                {this.state.startGame && 
+                    <Game />
                 }
 
                 {this.state.connected &&
@@ -120,7 +116,7 @@ class Dashboard extends React.Component {
                             <h3>Connected users</h3>
                             <ul>
                                 {this.state.connectedClients.map((client, index) => {
-                                    return (<li className="clientName" key={index}>{ client.getUserName() }</li>)
+                                    return (<li className="clientName" key={index}>{ client.userName }</li>)
                                 })}
                             </ul>
                         </div>
@@ -130,11 +126,11 @@ class Dashboard extends React.Component {
                 {(this.state.connected) &&
                     <div className="page-section">
                         <div className="games-container">
-                            <ul className="games-list">
+                            
                                 {this.state.games.map((game, index) => (
-                                    <li key={index} className="game">{game.id}</li>
+                                    <GameCard key={index} game={game} selected={this.state.selectionIndex == index}></GameCard> 
                                 ))}
-                            </ul>
+                            
                         </div>
                     </div>
                 }

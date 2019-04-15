@@ -12,6 +12,7 @@ class Dashboard extends React.Component {
         this.state = {
             clientName: "",
             roomName: "",
+            roomId: "",
             connected: false,
             fullscreen: false
         }
@@ -25,8 +26,8 @@ class Dashboard extends React.Component {
         this.setState(prevState => ({
             clientName: data.clientName,
             roomName: data.roomName,
+            roomId: data.roomId,
             connected: true,
-            selectedGame: ""
         }));
     }
 
@@ -41,7 +42,7 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
         socket.on(SERVER_MESSAGES.clientConnected, this.initData);
-        socket.on("start_game", this.handleGameStart)
+        socket.on(CLIENT_MESSAGES.gameStart, this.handleGameStart)
     }
 
     componentWillUnmount() {
@@ -82,7 +83,7 @@ class Dashboard extends React.Component {
 
     getController(){
         switch(this.state.selectedGame){
-            case "CAH": return <CahController clientName={this.state.clientName} roomName={this.state.roomName}></CahController>
+            case "CAH": return <CahController clientName={this.state.clientName} roomId={this.state.roomId}></CahController>
         }
     }
 
@@ -90,7 +91,7 @@ class Dashboard extends React.Component {
         return (
             <React.Fragment>
 
-                { (this.state.roomName && !this.state.selectedGame) && <Controller roomName={this.state.roomName}></Controller>}
+                { (this.state.roomName && !this.state.selectedGame) && <Controller roomId={this.state.roomId}></Controller>}
                 {this.state.selectedGame && this.getController() }
                 {!this.state.fullscreen &&
                     <div className="page-section">
@@ -119,7 +120,7 @@ class Dashboard extends React.Component {
                 {this.state.connected &&
                     <div className="page-section">
                         <h3>Connected to room: {this.state.roomName}</h3>
-                        <h3>User name: {this.state.clientName}</h3>
+                        <h3>Username: {this.state.clientName}</h3>
                     </div>
                 }
 

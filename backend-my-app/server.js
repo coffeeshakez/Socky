@@ -32,9 +32,9 @@ let rooms = [];
 
 
 io.on("connection", socket => {
-  console.log("New client connected: " + socket.id);
+  // console.log("New client connected: " + socket.id);
 
-  console.log(io.rooms);
+  // console.log(io.rooms);
 
   /* **************** HOST CONNECTION ****************** */ 
   socket.on(CLIENT_MESSAGES.connectHost, (roomName) => {
@@ -52,56 +52,48 @@ io.on("connection", socket => {
   /* **************** CLIENT CONNECTION ****************** */ 
   socket.on(CLIENT_MESSAGES.connectClient, (data) => {
     
-    let room = {}
-    rooms.forEach( room => {
-      if(room.roomName == data.roomName){
-        socket.join(data.roomName);
-        let client = new Client(data.userName, socket.id);
-        room.clients.push(client);
-        io.in(data.roomName).emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, clientName: data.clientName, socketId: socket.id});
-        return room;
-      }
-    })
-      
-      //Notify host of connection TODO: Only send to HOst connection, not all
-      
-      console.log(room);
-      //Notify client of connection
-      socket.emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, clientName: data.clientName});
-    
+    let room = rooms.find( room => room.roomName === data.roomName);
 
-    
-    setTimeout(() => console.log("ROOMS THE USER IS CONNECTED TO: ", socket.rooms), 1000);
-  });
+    if(room){
+      socket.join(data.roomName);
+      let client = new Client(data.clientName, socket.id);
+      room.addClient(client);
+      //Send to server
+      console.log("Client trying to connect to: " , room.id);
+      socket.to(room.id).emit(SERVER_MESSAGES.clientConnected, { client: client});
 
-  socket.on(CLIENT_MESSAGES.gameEvent, (data) => {
-    io.in(data.roomName).emit(CLIENT_MESSAGES.gameEvent, data);
-  });
-
-  socket.on("game_event_toUser", (data) => {
-    io.in(data.roomName).emit("game_event", data);
+      //Send to connected client
+      socket.emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, roomId: room.id, clientName: data.clientName});
+    }
   });
 
   socket.on(CLIENT_MESSAGES.controllerEvent, (data) => {
-    console.log("socket is connected to rooms: " + Object.keys(socket.rooms));
-    let rooms = Object.keys(socket.rooms)
-    Object.keys(socket.rooms).map(val => {
-      console.log("connected to: ", val);
-    })
-
-    io.in(data.roomName).emit(CLIENT_MESSAGES.controllerEvent, data);
+    io.to(data.roomId).emit(CLIENT_MESSAGES.controllerEvent, data);
   });
-  
+
+  socket.on(CLIENT_MESSAGES.gameEvent, (data) => {
+    console.log("GAME EVENT is happening");
+    io.to(data.roomName).emit(CLIENT_MESSAGES.gameEvent, data);
+  });
+
+  socket.on(CLIENT_MESSAGES.gameStart, (data) => {
+    console.log("GAME is starting", data.selectedGame);
+    io.in(data.roomName).emit(CLIENT_MESSAGES.gameEvent, data);
+  });
   
   //TODO: notify server of disconnect
   socket.on("disconnect", () => {
-    let room = Object.keys(socket.rooms)[0];
-    io.in(room).emit(SERVER_MESSAGES.userDisconnected, socket.id)
+    // let room = Object.keys(socket.rooms)[0];
+    
+    let room = rooms.find( (room, index) => {
+      // return room.id == socket.id
+    })
+    
+    // console.log("found room with id,", room.id , "connected to room", room.roomName);
+    // io.in(room).emit(SERVER_MESSAGES.userDisconnected, socket.id)
+
   });
 });
-
-
-
 
 
 

@@ -1,18 +1,14 @@
-function Room(roomName, roomId) {
+function Room(roomName, id) {
     this.roomName = roomName;
-    this.roomId = roomId;
+    this.id = id;
     this.connectedClients = [];
   }
   // Sets the age
   // 
   Room.prototype.getRoomId = function() {
-      return this.roomId;
+      return this.id;
   };
-
-  Room.prototype.getRoomId = function(){
-    return this.roomId;
-}
-
+  
 Room.prototype.getRoomName = function(){
     return this.roomName;
 }

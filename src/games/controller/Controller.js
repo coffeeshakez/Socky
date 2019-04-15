@@ -1,20 +1,19 @@
 import React from 'react';
 import './Controller.scss';
 import { socket } from "../../global/header";
+import {CLIENT_MESSAGES} from '../../scripts/Event';
 
 class Controller extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            roomName: props.roomName
-        }
 
         this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick(action, e){
-        socket.emit("controller_event", { roomName: this.state.roomName, action: action });
+        console.log("Handleclick is happening", action);
+        socket.emit(CLIENT_MESSAGES.controllerEvent, { roomId: this.props.roomId, action: action });
     }
 
     render() {

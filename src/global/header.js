@@ -10,11 +10,11 @@ class Header extends Component {
   constructor() {
     super();
     this.state = {
-      endpoint: window.location.hostname + ":80"    
+      endpoint: "192.168.1.89:80"
     };
 
     console.log("ENDPOINT", this.state.endpoint )
-   socket = io.connect(this.state.endpoint, {secure: true});
+   socket = io.connect(this.state.endpoint);
   }
 
   render() {

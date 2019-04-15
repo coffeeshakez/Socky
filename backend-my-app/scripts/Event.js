@@ -5,7 +5,8 @@ const CLIENT_MESSAGES = {
     connectHost: "CONNECT_HOST",
     gameEvent: "GAME_EVENT",
     gameEventToUser: "GAME_EVENT_TO_USER",
-    controllerEvent: "CONTROLLER_EVENT"
+    controllerEvent: "CONTROLLER_EVENT",
+    gameStart: "GAME_START"
   }
 
   const SERVER_MESSAGES = {

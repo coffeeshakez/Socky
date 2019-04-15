@@ -4,8 +4,6 @@ import { socket } from '../../global/header';
 
 
 class CahController extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
@@ -17,9 +15,9 @@ class CahController extends React.Component {
 
     handleGameEvent = (data) => {
 
-        if(data.event == "DEAL_CARDS"){
+        if(data.event === "DEAL_CARDS"){
             Object.keys(data.users).map(( element )  => {
-                if(element == this.state.clientName){
+                if(element === this.state.clientName){
                     
                 }
             })

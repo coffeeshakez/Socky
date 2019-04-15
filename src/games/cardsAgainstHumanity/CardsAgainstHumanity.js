@@ -2,6 +2,7 @@
 import React from 'react';
 import CahController from './CahController';
 import { socket } from '../../global/header';
+import { CLIENT_MESSAGES } from '../../scripts/Event';
 import './CardsAgainstHumanity.scss';
 
 class CardsAgainstHumanity extends React.Component {
@@ -21,10 +22,10 @@ class CardsAgainstHumanity extends React.Component {
 
     componentDidMount() {
         this.getQuestionCards();
-        socket.on("game_event");
-        socket.emit("start_game", { roomName: this.state.roomName, selectedGame: "CAH" });
+        
+        socket.emit(CLIENT_MESSAGES.gameStart, { roomName: this.state.roomName, selectedGame: "CAH" });
         document.getElementsByTagName("body")[0].classList.add("gradient");
-        this.dealCards(10);
+        // this.dealCards(10);
     }
 
     componentWillUnmount() {
