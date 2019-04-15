@@ -10,7 +10,7 @@ class Header extends Component {
   constructor() {
     super();
     this.state = {
-      endpoint: "192.168.1.89:80"
+      endpoint: "http://localhost:80"
     };
 
     console.log("ENDPOINT", this.state.endpoint )
