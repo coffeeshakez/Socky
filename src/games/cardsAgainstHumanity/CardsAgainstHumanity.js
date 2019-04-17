@@ -19,6 +19,7 @@ class CardsAgainstHumanity extends React.Component {
             whiteCards: []
         }
     }
+    
 
     componentDidMount() {
         this.getQuestionCards();
