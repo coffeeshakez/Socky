@@ -18,7 +18,7 @@ class Dashboard extends React.Component {
             connected: false,
             selection: 0,
             connectedClients: [],
-            games: [new Game("CAH", "Cards against humanity"), new Game("CAH", "Cards against humanity"), new Game("FTB", "FLICK THE BEAN"), new Game("WAM", "Whack a mole")],
+            games: [new Game("CAH", "Cards against humanity"), new Game("CAH", "Cards against humanity"), new Game("CAH", "Cards against humanity"), new Game("CAH", "Cards against humanity") ],
             selectionIndex: 0,
             startGame: false
         }

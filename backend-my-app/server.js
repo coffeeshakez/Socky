@@ -30,6 +30,7 @@ app.use(cors());
 
 let rooms = [];
 
+io.listen(server)
 
 io.on("connection", socket => {
   // console.log("New client connected: " + socket.id);
@@ -59,7 +60,7 @@ io.on("connection", socket => {
       let client = new Client(data.clientName, socket.id);
       room.addClient(client);
       //Send to server
-      console.log("Client trying to connect to: " , room.id);
+      console.log("Client trying to connect to: " , room.id, "Client information: ", client);
       socket.to(room.id).emit(SERVER_MESSAGES.clientConnected, { client: client});
 
       //Send to connected client
