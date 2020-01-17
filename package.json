@@ -12,7 +12,7 @@
     "socket.io-client": "^2.2.0"
   },
   "scripts": {
-    "start": "node backend-my-app/server.js",
+    "start": "cd backend-my-app && npm install && node server.js",
     "dev": "cd ./backend-my-app  && nodemon server.js",
     "build": "react-scripts build"
   },
