@@ -10,7 +10,7 @@ class Header extends Component {
   constructor() {
     super();
     this.state = {
-      endpoint: "http://localhost:80"
+      endpoint: "https://frozen-dawn-75764.herokuapp.com/"
     };
 
     console.log("ENDPOINT", this.state.endpoint )
