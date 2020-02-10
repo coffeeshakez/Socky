@@ -10,7 +10,7 @@ class Header extends Component {
   constructor() {
     super();
     this.state = {
-      endpoint: "https://frozen-dawn-75764.herokuapp.com/"
+      endpoint: ( (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ?  "http://localhost:80" : "https://frozen-dawn-75764.herokuapp.com/")
     };
 
     console.log("ENDPOINT", this.state.endpoint )
@@ -34,6 +34,14 @@ class Header extends Component {
             <NavLink exact to="/clientcontroller">
                 Client
               </NavLink>
+
+            </li>
+
+            <li>
+            <NavLink exact to="/test">
+                Test
+              </NavLink>
+              
             </li>
           </ul>
         </nav>

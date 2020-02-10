@@ -59,7 +59,6 @@ class Dashboard extends React.Component {
     }
 
     handleControllerEvent = event => {
-
         let test;
         let newValue;
         switch (event.action) {
@@ -83,8 +82,6 @@ class Dashboard extends React.Component {
         if(newValue != undefined){
             this.setState({selectionIndex: newValue}, () => console.log("index after setting state", this.state.selectionIndex))
         }
-        
-        
     }
 
     connectHost(e) {
@@ -98,22 +95,20 @@ class Dashboard extends React.Component {
     }
 
     render() {
-        
-        
         const Game = () => React.createElement(this.state.games[this.state.selectionIndex].getGame())
         
         return (
             <React.Fragment>
 
                 {this.state.startGame && 
-                    <Game />
+                    <Game roomName={this.state.roomName}/>
                 }
 
                 {this.state.connected &&
                     <div className="page-section">
                         <div>
                             <h3> Room id: {this.state.roomName} </h3>
-                            <h3>Connected users</h3>
+                            <h3>Connected users LOOOOL</h3>
                             <ul>
                                 {this.state.connectedClients.map((client, index) => {
                                     return (<li className="clientName" key={index}>{ client.userName }</li>)

@@ -38,6 +38,7 @@ class Dashboard extends React.Component {
     handleGameStart = data => {
         console.log("GAME START: ", data)
         this.setState({selectedGame: data.selectedGame});
+        
     }
 
     componentDidMount() {

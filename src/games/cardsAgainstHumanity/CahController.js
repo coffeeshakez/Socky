@@ -25,7 +25,7 @@ class CahController extends React.Component {
     }
 
     componentDidMount(){
-        socket.on("game_evnt", this.handleGameEvent);
+        socket.on("game_event", this.handleGameEvent);
 
     }
     componentWillUnmount(){
@@ -36,9 +36,7 @@ class CahController extends React.Component {
         return (
 
             <div className="page-section">
-
                 <ul className="cards-list">
-
                     <li className="cah-card">card fdjslkaj dglø jdsgaølkdgj økldsa jgs </li>
                     <li className="cah-card">card fdjslkaj dglø jdsgaølkdgj økldsa jgs </li>
                     <li className="cah-card">card fdjslkaj dglø jdsgaølkdgj økldsa jgs </li>
@@ -50,9 +48,7 @@ class CahController extends React.Component {
                             <li>{card.text} </li>
                         )
                     })} */}
-
                 </ul>
-                
             </div>
         );
     }

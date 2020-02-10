@@ -5,6 +5,7 @@ import { Switch, Route } from "react-router-dom";
 import Dashboard from './pages/dashboard/Dashboard';
 import ClientController from './pages/clientController/ClientController';
 import PageLayout from "./pageLayout/PageLayout";
+import Test from './pages/three/Test';
 
 /*The <Route> component is the main part of React Router. Anywhere that you want to only render content based on the location’s pathname, you should use a <Route> element. */
 
@@ -23,6 +24,7 @@ class App extends Component {
             <Route exact path="/" component={Dashboard} />
             <Route exact path="/dashboard" component={Dashboard} />
             <Route exact path="/clientcontroller" component={ClientController} />
+            
           </Switch>
         </PageLayout>
       </div>

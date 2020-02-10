@@ -59,6 +59,7 @@ io.on("connection", socket => {
       socket.join(data.roomName);
       let client = new Client(data.clientName, socket.id);
       room.addClient(client);
+      console.log(socket);
       //Send to server
       console.log("Client trying to connect to: " , room.id, "Client information: ", client);
       socket.to(room.id).emit(SERVER_MESSAGES.clientConnected, { client: client});
@@ -78,8 +79,10 @@ io.on("connection", socket => {
   });
 
   socket.on(CLIENT_MESSAGES.gameStart, (data) => {
-    console.log("GAME is starting", data.selectedGame);
-    io.in(data.roomName).emit(CLIENT_MESSAGES.gameEvent, data);
+    console.log("GAME is starting TEST", data.selectedGame);
+    
+    console.log("Roomname: ", data.roomName);
+    io.to(data.roomName).emit(CLIENT_MESSAGES.gameStart, data);
   });
   
   //TODO: notify server of disconnect
@@ -96,8 +99,6 @@ io.on("connection", socket => {
   });
 });
 
-
-
 /* Below mentioned steps are performed to return the Frontend build of create-react-app from build folder of backend */
 
 app.use(express.static("../build"));
@@ -106,4 +107,4 @@ app.use("/", express.static("build"));
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
 
-// euris.io, lynth.io , zeew.io, zetz.io, 
+// euris.io, lynth.io , zeew.io, zetz.io,
