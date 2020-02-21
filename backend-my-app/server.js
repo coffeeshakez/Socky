@@ -5,6 +5,7 @@ const cors = require('cors');
 const socketIO = require('socket.io')
 const {CLIENT_MESSAGES, SERVER_MESSAGES} = require('./scripts/Event');
 const Room =  require('./models/Room');
+const Utils = require('./scripts/Utils');
 const Client = require('./models/Client');
 
 
@@ -45,8 +46,8 @@ io.on("connection", socket => {
     let room = new Room(roomName, socket.id)
     rooms.push(room);
     
-    console.log(rooms);
-
+    
+    
     socket.emit(SERVER_MESSAGES.hostConnected, roomName);
   });
 
@@ -57,12 +58,19 @@ io.on("connection", socket => {
 
     if(room){
       socket.join(data.roomName);
-      let client = new Client(data.clientName, socket.id);
+      let client = new Client(data.clientName, socket.id, data.roomName);
       room.addClient(client);
-      console.log(socket);
+      
       //Send to server
       console.log("Client trying to connect to: " , room.id, "Client information: ", client);
+
       socket.to(room.id).emit(SERVER_MESSAGES.clientConnected, { client: client});
+
+      rooms.forEach(room => {
+        room.connectedClients.forEach(client => {
+          console.log("CLIENTS: ", client);
+        });
+      });
 
       //Send to connected client
       socket.emit(SERVER_MESSAGES.clientConnected, {roomName: data.roomName, roomId: room.id, clientName: data.clientName});
@@ -74,14 +82,13 @@ io.on("connection", socket => {
   });
 
   socket.on(CLIENT_MESSAGES.gameEvent, (data) => {
-    console.log("GAME EVENT is happening");
+    
     io.to(data.roomName).emit(CLIENT_MESSAGES.gameEvent, data);
   });
 
   socket.on(CLIENT_MESSAGES.gameStart, (data) => {
-    console.log("GAME is starting TEST", data.selectedGame);
-    
-    console.log("Roomname: ", data.roomName);
+    let room = Utils.getRoomFromRoomName(rooms, data.roomName);
+    socket.emit(SERVER_MESSAGES.initialData, {players: "test"});
     io.to(data.roomName).emit(CLIENT_MESSAGES.gameStart, data);
   });
   

@@ -16,22 +16,27 @@ class CardsAgainstHumanity extends React.Component {
             currentCard: "",
             roomName: props.roomName,
             blackCards: [],
-            whiteCards: []
+            whiteCards: [],
+            players: {}
         }
     }
     
 
     componentDidMount() {
         this.getQuestionCards();
-        
         socket.emit(CLIENT_MESSAGES.gameStart, { roomName: this.state.roomName, selectedGame: "CAH" });
+        socket.on(CLIENT_MESSAGES.gameStart, console.log("GAME HAS STARTED, host speaking"));
+        // let playerCards = this.dealCards(10);
+        // socket.emit(CLIENT_MESSAGES.gameEvent, { data: {cards: playerCards}});
+        //Not good, use ref
         document.getElementsByTagName("body")[0].classList.add("gradient");
-        // this.dealCards(10);
     }
 
     componentWillUnmount() {
         //remove socket connection
-        socket.off("game_event");
+        socket.off(CLIENT_MESSAGES.gameStart);
+        socket.off(CLIENT_MESSAGES.gameEvent);
+
         //remove background styles
         document.getElementsByTagName("body")[0].classList.remove("gradient");
     }
@@ -46,7 +51,6 @@ class CardsAgainstHumanity extends React.Component {
             .then(data => {
                 this.setState({ blackCards: data.blackCards, whiteCards: data.whiteCards })
                 this.getRandomCard("black");
-                console.log(this.state.blackCards)
             })
             .catch(err => {
                 // Do something for an error here

@@ -91,24 +91,23 @@ class Dashboard extends React.Component {
 
     handleInputChange(e) {
         this.setState({ name: e.target.value });
-        console.log(this.state.name);
     }
 
     render() {
-        const Game = () => React.createElement(this.state.games[this.state.selectionIndex].getGame())
+        const Game = () => React.createElement(this.state.games[this.state.selectionIndex].getGame(), { roomName: this.state.roomName, test: "testprops"} );
         
         return (
             <React.Fragment>
 
                 {this.state.startGame && 
-                    <Game roomName={this.state.roomName}/>
+                    <Game/>
                 }
 
                 {this.state.connected &&
                     <div className="page-section">
                         <div>
                             <h3> Room id: {this.state.roomName} </h3>
-                            <h3>Connected users LOOOOL</h3>
+                            <h3>Connected users</h3>
                             <ul>
                                 {this.state.connectedClients.map((client, index) => {
                                     return (<li className="clientName" key={index}>{ client.userName }</li>)
